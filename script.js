@@ -1,32 +1,60 @@
-//your JS code here. If required.
-function activate(panel) {
-document.querySelectorAll('.panel').forEach(p => {
-p.classList.toggle('active', p === panel);
-p.setAttribute('aria-pressed', p === panel ? 'true' : 'false');
-});
+*, *::before, *::after { box-sizing: border-box; }
+transition: flex 0.6s cubic-bezier(.25,.8,.25,1),
+transform 0.3s ease,
+filter 0.3s ease;
+outline: none; /* we will add a custom focus ring */
+filter: saturate(0.7) brightness(0.85);
 }
 
 
-// Click to activate
-document.querySelectorAll('.panel').forEach((panel) => {
-panel.addEventListener('click', () => activate(panel));
-// Keyboard support: Enter/Space to activate; Arrow keys to navigate
-panel.addEventListener('keydown', (e) => {
-const panels = Array.from(document.querySelectorAll('.panel'));
-const idx = panels.indexOf(panel);
-if (e.key === 'Enter' || e.key === ' ') {
-e.preventDefault();
-activate(panel);
-} else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-e.preventDefault();
-const next = panels[(idx + 1) % panels.length];
-next.focus();
-activate(next);
-} else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-e.preventDefault();
-const prev = panels[(idx - 1 + panels.length) % panels.length];
-prev.focus();
-activate(prev);
+.panel::after {
+content: "";
+position: absolute;
+inset: 0;
+background: linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,.55) 100%);
+pointer-events: none;
+opacity: 0.85;
+transition: opacity 0.3s ease;
 }
-});
-});
+
+
+.panel:hover { transform: translateY(-2px); filter: saturate(0.9) brightness(0.95); }
+
+
+.panel.active { flex: 5; filter: none; }
+.panel.active::after { opacity: 1; }
+
+
+/* --- Text label (required class: img-text) --- */
+.img-text {
+position: absolute;
+left: 18px;
+bottom: 16px;
+margin: 0;
+font-weight: 700;
+letter-spacing: 0.3px;
+font-size: clamp(1rem, 2.2vw + .3rem, 2rem);
+color: #fff;
+text-shadow: 0 1px 2px rgba(0,0,0,.5), 0 6px 24px rgba(0,0,0,.45);
+opacity: 0; /* hidden when shrunk */
+transform: translateY(6px);
+transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+
+.panel.active .img-text { opacity: 1; transform: translateY(0); }
+
+
+/* --- Accessibility: focus ring & reduced motion --- */
+.panel:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,.9); }
+@media (prefers-reduced-motion: reduce) {
+.panel { transition: none; }
+.img-text { transition: none; }
+}
+
+
+/* --- Small screens: stack vertically --- */
+@media (max-width: 640px) {
+.container { height: auto; flex-direction: column; }
+.panel { min-height: 48vh; }
+}

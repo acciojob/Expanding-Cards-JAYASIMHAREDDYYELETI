@@ -1,10 +1,4 @@
 *, *::before, *::after { box-sizing: border-box; }
-border-radius: 22px;
-overflow: hidden;
-cursor: pointer;
-background-size: cover;
-background-position: center;
-background-repeat: no-repeat;
 transition: flex 0.6s cubic-bezier(.25,.8,.25,1),
 transform 0.3s ease,
 filter 0.3s ease;
@@ -28,7 +22,10 @@ transition: opacity 0.3s ease;
 
 
 .panel.active { flex: 5; filter: none; }
-.panel.active::after { opacity: 1;
+.panel.active::after { opacity: 1; }
+
+
+/* --- Text label (required class: img-text) --- */
 .img-text {
 position: absolute;
 left: 18px;
